@@ -17,21 +17,24 @@ class BlitzIO(tk.Frame):
 	tags = {'__string': 'blue',
 			'__integer': 'purple',
 			'__function': 'skyblue',
-			'__function_parameter': 'orange',
+			'__function_declaration': 'orange',
+			'__function_name': 'red',
 			'__variable': 'hotpink',
+			'__function_parameter': 'hotpink',
 			'__boolean': 'lime'}
 
 	def __init__(self, parent, *args, **kwargs):
 		tk.Frame.__init__(self, parent, *args, **kwargs)
 		self.text = tk.Text(self, bd=0)
+
 		self.text.insert("end", "Select part of text and then click 'Bold'...")
 		self.text.focus()
 		self.text.pack(fill="both", expand=True)
-
+		self.text['font'] = Font(family="fixedsys")
 		self.text.tag_configure("STRINGs", foreground="blue")
 
 		self.config_tags()
-		self.text.bind('<Key>', self.key_press)
+		self.text.bind('<KeyRelease>', self.key_press)
 
 	def parse_tokens(self,strx):
 		self.Xplexer.parseIntoTokens(strx)
@@ -52,6 +55,6 @@ class BlitzIO(tk.Frame):
 			self.parse_tokens(line)
 			theTokens = self.Xplexer.tokens
 			print(line)
+			print(theTokens)
 			for i in range(0,len(theTokens[3])):
-				print(theTokens)
 				self.text.tag_add('__'+theTokens[3][i].lower(),str(lineNum)+"."+str(theTokens[1][i]),str(lineNum)+"."+str(theTokens[2][i]))
