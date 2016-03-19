@@ -16,6 +16,7 @@ def parseIntoTokens(theString):
 	previousLetter = ""
 	isStringOpen = False
 	stringOpenAt = 0
+	stringOpenWith = ""
 	for i in range(0,len(theString)):
 		# For each index of every letter
 		currentLetter = theString[i]
@@ -43,14 +44,26 @@ def parseIntoTokens(theString):
 			tokens[3].append("INTEGER")
 		elif isStringOpen == False and currentLetter == "\"":
 			isStringOpen = True
+			stringOpenWith = "\""
 			addToken("\"",i,i+1,"DOUBLEQUOTE")
 			stringOpenAt = i
-		elif isStringOpen == True and currentLetter == "\"":			
+		elif isStringOpen == True and stringOpenWith == "\"" and currentLetter == "\"":			
 			stringLength = i - stringOpenAt
 			value = theString[stringOpenAt+1:stringOpenAt + stringLength]
 			addToken(value,stringOpenAt,i,"STRING")
 			isStringOpen = False
 			addToken("\"",i,i+1,"DOUBLEQUOTE")
+		elif isStringOpen == False and currentLetter == "\'":
+			isStringOpen = True
+			stringOpenWith = "\'"
+			addToken("\'",i,i+1,"SINGLEQUOTE")
+			stringOpenAt = i
+		elif isStringOpen == True and stringOpenWith == "\'" and currentLetter == "\'":			
+			stringLength = i - stringOpenAt
+			value = theString[stringOpenAt+1:stringOpenAt + stringLength]
+			addToken(value,stringOpenAt,i,"STRING")
+			isStringOpen = False
+			addToken("\'",i,i+1,"SINGLEQUOTE")
 		elif isStringOpen == False and currentLetter == "=" and theString[i-1] != "=":
 			if theString[i+1] == "=" and theString[i+2] != "=":
 				addToken("==",i,i+2,"IF_EQUALS")
@@ -161,9 +174,10 @@ def cleanReg():
 	del tokens[1][0]
 	del tokens[2][0]
 	del tokens[3][0]
-	del errors[0][0]
-	del errors[1][0]
-	del errors[2][0]
+	if len(errors[0])>1:
+		del errors[0][0]
+		del errors[1][0]
+		del errors[2][0]
 
 def clearReg():
 	tokens = [["content"],[0],[0],["type"]]
