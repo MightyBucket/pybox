@@ -249,3 +249,31 @@ def logError(message,typeX,loc):
 
 print(tokens)
 print(errors)
+
+
+## WHAT IT DOES:
+## The tokenizer, plexer, cuts the chunks of code that is passed to it as parameters so that it can be placed into
+## tokens array. 
+## The token array holds information about each token, such as; value, startPos, endPos and the datatype
+
+## EX.
+## def pino(self):
+##     return "hello world"
+
+
+## The example above will be turned into the following tokens
+
+## ["def",0,3,"FUNCTION_DEFINITION"]
+## ["pino",4,8,"FUNCTION_NAME"]
+## ["(",8,9,"LEFT_PAREN"]
+## ["self",9,13,"FUNCTION_PARAMETERS"]
+## [")",13,14,"RIGHT_PAREN"]
+## [":",14,15,"FUNCTION_OPENING"]
+## ["\t",16,17,"TAB"]
+## ["return",17,23,"KEYWORD_RETURN"]
+## ["'",24,25,"DOUBLEQUOTE"]
+## ["hello world",25,36,"STRING"]
+## ["'",24,25,"DOUBLEQUOTE"]
+
+## These tokens can be used to easily compare and understand each section of a command
+## I can use these tokens for the syntax highlighting using the BlitzIO class in 'Blitz.py'
