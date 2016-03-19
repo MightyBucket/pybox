@@ -34,7 +34,7 @@ class AriaIO(tk.Frame):
 
 	def colorize(self,start,end):
 		# try:
-		self.text.tag_add("STRINGs","1.0")
+		self.text.tag_add("BOLD","1.0", 'end')
 		# except tk.TclError:
 		# 	pass
 

@@ -22,7 +22,7 @@ def parseIntoTokens(theString):
 		currentLetter = theString[i]
 		previousLetter = theString[i] if i == 0 else theString[i-1]
 		if isStringOpen == False and currentLetter == " ":
-			print("space out of place")
+			currentLetter = theString[i]
 		elif isStringOpen == False and currentLetter.isdigit() and theString[i-1].isdigit() == False:
 			print("found digit")
 			value = str(currentLetter)
