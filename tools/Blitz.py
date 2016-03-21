@@ -19,9 +19,10 @@ class BlitzIO(tk.Frame):
 			'__function': 'skyblue',
 			'__function_declaration': 'orange',
 			'__function_name': 'red',
-			'__variable': 'hotpink',
+			'__variable': 'gray',
 			'__function_parameter': 'hotpink',
-			'__boolean': 'lime'}
+			'__boolean': 'lime',
+			'__keyword': 'yellow'}
 
 	def __init__(self, parent, *args, **kwargs):
 		tk.Frame.__init__(self, parent, *args, **kwargs)
@@ -54,7 +55,5 @@ class BlitzIO(tk.Frame):
 			lineNum+=1
 			self.parse_tokens(line)
 			theTokens = self.Xplexer.tokens
-			print(line)
-			print(theTokens)
 			for i in range(0,len(theTokens[3])):
 				self.text.tag_add('__'+theTokens[3][i].lower(),str(lineNum)+"."+str(theTokens[1][i]),str(lineNum)+"."+str(theTokens[2][i]))

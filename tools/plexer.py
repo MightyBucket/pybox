@@ -5,12 +5,14 @@
 ## I AM PLANNING TO CHANGE THE LICENSE TO MIT-LICENSE FOR THIS PROJECT ONCE IT IS COMPLETE
 ## PLEASE READ THE BITS OF INFORMATION AT THE BOTTOM OF THIS CODE
 
-tokens = [["content"],[0],[0],["type"]]
+from PP import *
+
+tokens = [["__no_token"],[0],[0],["type"]]
 errors = [["message"],["type"],[0]]
 
 def parseIntoTokens(theString):
 	resetReg()
-	print("Starting parser. . . ")
+	print("DBUG: Starting parser. . . ")
 	lastContent = ""
 	currentLetter = ""
 	previousLetter = ""
@@ -23,14 +25,9 @@ def parseIntoTokens(theString):
 		currentLetter = theString[i]
 		previousLetter = theString[i] if i == 0 else theString[i-1]
 		nextLetter = theString[i] if i == len(theString)-1 else theString[i+1]
-		print("PREVIOUS LETTER WAS: "+previousLetter)
-		print("CURRENT LETTER IS: "+currentLetter)
-		print("NEXT LETTER IS: "+nextLetter)
-		print("NEXT TWO LETTERS ARE: "+currentLetter + nextLetter)
 		if isStringOpen == False and currentLetter == " ":
 			currentLetter = theString[i]
 		elif isStringOpen == False and currentLetter.isdigit() and theString[i-1].isdigit() == False:
-			print("found digit")
 			value = str(currentLetter)
 			end = False
 			ic = i
@@ -132,25 +129,23 @@ def parseIntoTokens(theString):
 				addToken(theString,i,ic,"FUNCTION_NAME")
 			else:
 				logError("Missing function name","NO_DEF_NAME",i)
-		elif tokens[3][-1] != "FUNCTION_NAME" and isStringOpen == False and currentLetter != "=" and currentLetter!="(" and currentLetter!=")" and (theString[i-1] == " " or tokens[3][-1] != "TAB" or theString[i-1] == "=" or theString[i-1] == "(" or i ==0 ):
-			print(str((currentLetter).encode('utf8'))[2:-1])
-			if str((currentLetter).encode('utf8'))[2:-1] == "\\t":
-				addToken(theString,i,i+1,"TAB")
-			else:
-				end = False
-				value = theString[i]
-				ic = i
-				while end == False:
-					if len(theString)> (ic+1):
-						ic+=1
-					else:
-						end = True
-	
-					if end == False and theString[ic] != " " and theString[ic] != ")":
-						value += theString[ic]
-					else:
-						end = True
-				addToken(theString,i,ic,"VARIABLE")
+		elif tokens[3][-1] != "FUNCTION_NAME" and isStringOpen == False and currentLetter != "=" and currentLetter!="(" and currentLetter!=")" and (theString[i-1] == " " or theString[i-1] == "=" or theString[i-1] == "(" or i ==0 ):
+			# if str((currentLetter).encode('utf8'))[2:-1] == "\\t":
+			# 	addToken(theString,i,i+1,"TAB")
+			end = False
+			value = theString[i]
+			ic = i
+			while end == False:
+				if len(theString)> (ic+1):
+					ic+=1
+				else:
+					end = True
+
+				if end == False and theString[ic] != " " and theString[ic] != ")":
+					value += theString[ic]
+				else:
+					end = True
+			addToken(theString,i,ic,"VARIABLE")
 		elif tokens[3][-1] != "TAB" and tokens[3][-1] != "FUNCTION_NAME" and isStringOpen == False and currentLetter != "=" and currentLetter!="(" and currentLetter!=")" and (theString[i-1] == " " or theString[i-1] == "=" or theString[i-1] == "(" or i ==0 ):
 			end = False
 			value = theString[i]
@@ -190,8 +185,11 @@ def parseIntoTokens(theString):
 					else:
 						end = True
 						addToken(theString,i,ic,"FUNCTION_PARAMETER")
-	print("Parsing complete!")
+	print("DBUG: Parsing complete!")
 	clearFirstToken()
+	print("DBUG: Final tokens: ",end="\n")
+	print("      " + str(tokens[0]), end="\n")
+	print("      " + str(tokens[3]), end="\n")
 
 def clearFirstToken():
 	tokens[0].pop(0)
@@ -213,7 +211,7 @@ def resetReg():
 	del errors[1][:]
 	del errors[2][:]
 	try:
-		tokens[0][0] = "content"
+		tokens[0][0] = "__no_token"
 		tokens[1][0] = 0
 		tokens[2][0] = 0
 		tokens[3][0] = "type"
@@ -221,11 +219,10 @@ def resetReg():
 		errors[1][0] = "type"
 		errors[2][0] = 0
 	except:
-		tokens[0].append("content")
+		tokens[0].append("__no_token")
 		tokens[1].append(0)
 		tokens[2].append(0)
 		tokens[3].append("type")
-		print(tokens)
 
 def addToken(val,startPos,endPos,typeX):
 	xvalue = val[startPos:startPos + (endPos-startPos)]
@@ -233,22 +230,21 @@ def addToken(val,startPos,endPos,typeX):
 	tokens[1].append(startPos)
 	tokens[2].append(endPos)
 	tokens[3].append(typeX)
-	print("added '"+str(xvalue.encode('utf8'))[2:-1]+"' to token")
+	isComplete = postProcessor.process(tokens)
+	while isComplete == False:
+		isComplete = postProcessor.process(tokens)
 
 def logError(message,typeX,loc):
 	errors[0].append(message)
 	errors[1].append(typeX)
 	errors[2].append(loc)
-	print("ERR at "+ str(loc) + ": " + typeX + " > " + message)
+	print("ERRO: at "+ str(loc) + ": " + typeX + " > " + message)
 
 
 ## NOTES:
 ## Currently having some difficulties differentiating between variables and function-parameters and parameter values
 ## To parse statements into tokens, call the parseIntoTokens function, passing the statements as string as parameters
 ## At current, parsing will have to be done line by line for correct syntax
-
-print(tokens)
-print(errors)
 
 
 ## WHAT IT DOES:
