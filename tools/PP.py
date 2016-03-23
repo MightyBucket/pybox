@@ -20,10 +20,12 @@ class postProcessor():
 		for toke in tokens[0]:
 			currentIndex +=1
 			if len(tokens[0])>1 and toke == "__no_token":
-				tokens[0].pop(0)
-				tokens[1].pop(0)
-				tokens[2].pop(0)
-				tokens[3].pop(0)
+				# tokens[0].pop(0)
+				# tokens[1].pop(0)
+				# tokens[2].pop(0)
+				# tokens[3].pop(0)
+				# WHETHER THE ABOVE IS REQUIRED IS NOT ENTIRELY CLEAR
+				print("",end="")
 			if str((toke).encode('utf8'))[2:-1].startswith("\\t") and len(str((toke).encode('utf8'))[2:-1])>3:
 				## Had to do this to split tabs from variables and such objects
 				tokens[0][currentIndex] = tokens[0][currentIndex][1:]
