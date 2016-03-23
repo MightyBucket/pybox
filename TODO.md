@@ -18,10 +18,11 @@ TODO LONG-TERM
  - [ ] Enable the extension engine
  - [ ] Add extension-builder capability
  - [ ] Stress test
+ - [ ] Create snippets
 
 STRESS TEST RESULTS
 ==
 | Function Tested | Expected | Outcome | Improvements |
--------------------------------------------------------
+|-----------------|----------|---------|--------------|
 | Error detection and collection | Errors to be recorded when detected | Errors were recorded but list does not clear | Ensure list clears on new build |
 | Token creation  | Tokens created as expected | Tokens were created as expected | No improvements necessary atm |
